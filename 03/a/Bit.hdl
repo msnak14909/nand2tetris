@@ -15,4 +15,7 @@ CHIP Bit {
 
     PARTS:
     // Put your code here:
+    Mux(a=L, b=in, sel=load, out=R);//if load: 'in' will be selected
+    DFF(in=R, out=L, out=out);
+    
 }

@@ -8,6 +8,10 @@
  * stored at the memory location specified by address. If load==1, then 
  * the in value is loaded into the memory location specified by address 
  * (the loaded value will be emitted to out from the next time step onward).
+ *
+ *
+ *  it added a dmux to select which address you want to access
+ *
  */
 
 CHIP RAM8 {
@@ -16,4 +20,15 @@ CHIP RAM8 {
 
     PARTS:
     // Put your code here:
+
+    DMux8Way(in=load, sel=address, a=A, b=B, c=C, d=D, e=E, f=F, g=G, h=H);
+    Register(in=in, load=A, out=oA);
+    Register(in=in, load=B, out=oB);
+    Register(in=in, load=C, out=oC);
+    Register(in=in, load=D, out=oD);
+    Register(in=in, load=E, out=oE);
+    Register(in=in, load=F, out=oF);
+    Register(in=in, load=G, out=oG);
+    Register(in=in, load=H, out=oH);
+    Mux8Way16(a=oA, b=oB, c=oC, d=oD, e=oE, f=oF, g=oG, h=oH, sel=address, out=out);
 }
