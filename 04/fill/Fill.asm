@@ -9,3 +9,39 @@
 // program clears the screen, i.e. writes "white" in every pixel.
 
 // Put your code here.
+(LOOP)
+@SCREEN
+D=A
+@R0
+M=D
+
+(SCREENLOOP)
+@KBD
+D=M
+
+@WHITE
+D;JEQ //no pressed jmp to WHITE
+
+(BLACK)
+@R0
+A=M // address = RAM[R0] = SCREEN ADDRESS
+M=-1 // let screen address memory be 0xFFFF (BLACK pixel)
+@END
+0;JEQ // jmp END
+
+(WHITE)
+@R0
+A=M
+M=0
+
+(END)
+@R0
+M=M+1
+D=M // address of next screen address 
+
+@KBD
+D=D-A
+@SCREENLOOP
+D;JNE
+@LOOP
+0;JEQ
