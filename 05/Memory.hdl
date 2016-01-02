@@ -22,10 +22,33 @@
  * Screen and Keyboard chip specifications given in the book.
  */
 
+/**       scope:        [15:0]            [15:12]       [14:13]
+ * memory map:          Address(16)       Address(2)    Address(2)
+          RAM:          0x0000 ~ 0x3fff : 0000        : 00
+          SCREEN:       0x4000 ~ 0x5fff : 0100        : 10
+          KEYBOARD:     0x6000          : 0110        : 11
+
+          idea: take 00~01 to repersent RAM
+                     10    "  "         SCREEN
+                     11    "  "         KEYBOARD
+
+   Read:  out(t) = Memory[address(t)](t)
+   Write: if load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ */
+
 CHIP Memory {
     IN in[16], load, address[15];
     OUT out[16];
 
     PARTS:
     // Put your code here:
+    
+    DMux4Way(in=load, sel=address[13..14], a=r0, b=r1, c=sc, d=kbd);
+    Or(a=r0, b=r1, out=r);
+    
+    RAM16K(in=in, load=r, address=address[0..13], out=ro);
+    Screen(in=in, load=sc, address=address[0..12], out=sco);
+    Keyboard(out=ko);
+    
+    Mux4Way16(a=ro, b=ro, c=sco, d=ko, sel=address[13..14], out=out);
 }
